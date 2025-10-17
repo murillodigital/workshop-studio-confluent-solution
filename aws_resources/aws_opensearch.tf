@@ -157,8 +157,8 @@ resource "aws_opensearch_domain" "OpenSearch" {
         Principal = {
           AWS = "*"
         }
-        Action = "es:*"
-        Resource = "arn:aws:es:${var.region}:${data.aws_caller_identity.current.account_id}:domain/${var.prefix}-${random_id.env_display_id.hex}/*"
+        Action = "opensearch:*"
+        Resource = "arn:aws:opensearch:${var.region}:${data.aws_caller_identity.current.account_id}:domain/${var.prefix}-${random_id.env_display_id.hex}/*"
       }
     ]
   })
