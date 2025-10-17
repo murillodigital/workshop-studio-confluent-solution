@@ -119,6 +119,15 @@ resource "aws_iam_service_linked_role" "opensearch" {
   }
 }
 
+resource "aws_iam_service_linked_role" "opensearch-legacy" {
+  aws_service_name = "es.amazonaws.com"
+  description      = "Service-linked role for Amazon OpenSearch Legacy Service to access VPC resources"
+  
+  lifecycle {
+    ignore_changes = [description]
+  }
+}
+
 # Security group for OpenSearch
 resource "aws_security_group" "opensearch_sg" {
   name        = "${var.prefix}-opensearch-sg-${random_id.env_display_id.hex}"
@@ -234,7 +243,7 @@ resource "aws_opensearch_domain" "OpenSearch" {
     Name = "${var.prefix}-opensearch-${random_id.env_display_id.hex}"
   }
 
-  depends_on = [aws_iam_service_linked_role.opensearch]
+  depends_on = [aws_iam_service_linked_role.opensearch, aws_iam_service_linked_role.opensearch-legacy]
 }
 
 output "opensearch_details" {
