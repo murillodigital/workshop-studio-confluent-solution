@@ -301,7 +301,7 @@ resource "aws_instance" "oracle_instance" {
     CONNECT sys/${random_password.oracle_db_password.result} AS SYSDBA
     ALTER SESSION SET CONTAINER=XEPDB1;
 
-    CREATE USER sample IDENTIFIED BY ${random_password.oracle_db_password.result};
+    CREATE USER sample IDENTIFIED BY "${random_password.oracle_db_password.result}";
     GRANT CONNECT, RESOURCE TO sample;
     ALTER USER sample QUOTA UNLIMITED ON USERS;
 
@@ -316,7 +316,7 @@ resource "aws_instance" "oracle_instance" {
     log "Create XStream admin user"
     sudo docker exec -i oracle-xe bash -c "ORACLE_SID=XE; export ORACLE_SID; sqlplus /nolog" <<SQL_EOF
     CONNECT sys/${random_password.oracle_db_password.result} AS SYSDBA
-    CREATE USER c##cfltadmin IDENTIFIED BY ${random_password.oracle_xstream_user_password.result}
+    CREATE USER c##cfltadmin IDENTIFIED BY "${random_password.oracle_xstream_user_password.result}"
     DEFAULT TABLESPACE xstream_adm_tbs
     QUOTA UNLIMITED ON xstream_adm_tbs
     CONTAINER=ALL;
@@ -339,7 +339,7 @@ resource "aws_instance" "oracle_instance" {
     log "Create XStream connect user"
     sudo docker exec -i oracle-xe bash -c "ORACLE_SID=XE; export ORACLE_SID; sqlplus /nolog" <<SQL_EOF
     CONNECT sys/${random_password.oracle_db_password.result} AS SYSDBA
-    CREATE USER c##cfltuser IDENTIFIED BY ${random_password.oracle_xstream_user_password.result}
+    CREATE USER c##cfltuser IDENTIFIED BY "${random_password.oracle_xstream_user_password.result}"
     DEFAULT TABLESPACE xstream_tbs
     QUOTA UNLIMITED ON xstream_tbs
     CONTAINER=ALL;
