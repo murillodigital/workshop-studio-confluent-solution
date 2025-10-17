@@ -110,6 +110,15 @@ resource "aws_cloudwatch_log_resource_policy" "opensearch_logs" {
   })
 }
 
+resource "aws_iam_service_linked_role" "opensearch" {
+  aws_service_name = "opensearch.amazonaws.com"
+  description      = "Service-linked role for Amazon OpenSearch Service to access VPC resources"
+  
+  lifecycle {
+    ignore_changes = [description]
+  }
+}
+
 # Security group for OpenSearch
 resource "aws_security_group" "opensearch_sg" {
   name        = "${var.prefix}-opensearch-sg-${random_id.env_display_id.hex}"
@@ -224,6 +233,8 @@ resource "aws_opensearch_domain" "OpenSearch" {
   tags = {
     Name = "${var.prefix}-opensearch-${random_id.env_display_id.hex}"
   }
+
+  depends_on = [aws_iam_service_linked_role.opensearch]
 }
 
 output "opensearch_details" {
